@@ -1,5 +1,6 @@
 import "./App.css";
 import TextEditor from "./Components/textEditor";
+import { API_URL } from "./constants";
 
 function App() {
   return (

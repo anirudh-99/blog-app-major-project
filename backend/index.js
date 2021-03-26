@@ -8,6 +8,7 @@ const path = require("path");
 const app = express();
 
 const userRoutes = require("./routes/authRoutes");
+const fileRoutes = require("./routes/fileRoutes");
 const globalErrorHandler = require("./controllers/errorController");
 
 //env variable
@@ -27,14 +28,14 @@ mongoose
   });
 
 //routes
-app.use("/api/users",userRoutes);
-app.use("/api/public",express.static(path.join(__dirname,"uploads")));
+app.use("/api/users", userRoutes);
+app.use("/api/files", fileRoutes);
+app.use("/api/public", express.static(path.join(__dirname, "uploads")));
 
 app.use(globalErrorHandler);
 
 const port = process.env.PORT || 3000;
 
 app.listen(process.env.PORT, () => {
-    console.log(`server is running at port ${port}`);
+  console.log(`server is running at port ${port}`);
 });
-
