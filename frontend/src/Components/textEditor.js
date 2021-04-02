@@ -7,6 +7,8 @@ import { API_URL } from "../constants";
 
 import axios from "axios";
 
+
+
 const uploadImageCallback = (file) => {
   return new Promise((resolve, reject) => {
     const formData = new FormData();
@@ -29,9 +31,28 @@ const uploadImageCallback = (file) => {
 
 const TextEditor = (props) => {
   const [rawContentState, setRawContentState] = useState(null);
+  const [title, setTitle] = useState("Untitled");
 
-  const upload = () => {
-    const markup = draftToHtml(rawContentState);
+  const upload = async () => {
+    // const markup = draftToHtml(rawContentState);
+    // console.log(markup);
+    await axios.post(
+      `${API_URL}/blogs`,
+      {
+        title: "something",
+        description: "something something",
+        content: rawContentState,
+      },
+      {
+        "Content-Type": "application/json",
+      }
+    );
+  };
+
+  const getBlog = async () => {
+    const res = await axios.get(`${API_URL}/blogs/605ddb451cf6a9dc759d2ac2`);
+    const rawContent = res.data.data.blog.content;
+    const markup = draftToHtml(rawContent);
     console.log(markup);
   };
 
@@ -64,6 +85,7 @@ const TextEditor = (props) => {
         }}
       />
       <button onClick={upload}>Upload</button>
+      <button onClick={getBlog}>GetBlog</button>
     </>
   );
 };

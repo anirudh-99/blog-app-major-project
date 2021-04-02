@@ -9,6 +9,7 @@ const app = express();
 
 const userRoutes = require("./routes/authRoutes");
 const fileRoutes = require("./routes/fileRoutes");
+const blogRoutes = require("./routes/blogRoutes");
 const globalErrorHandler = require("./controllers/errorController");
 
 //env variable
@@ -30,6 +31,7 @@ mongoose
 //routes
 app.use("/api/users", userRoutes);
 app.use("/api/files", fileRoutes);
+app.use("/api/blogs", blogRoutes);
 app.use("/api/public", express.static(path.join(__dirname, "uploads")));
 
 app.use(globalErrorHandler);
