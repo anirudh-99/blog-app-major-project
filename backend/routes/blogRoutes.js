@@ -28,6 +28,7 @@ const upload = multer({
   },
 });
 
+Router.get("/",BlogController.getBlogs);
 Router.post("/",BlogController.createBlog);
 Router.get("/:id",BlogController.getBlog);
 

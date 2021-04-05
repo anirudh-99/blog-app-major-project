@@ -2,6 +2,7 @@ const Blog = require("../models/blog.model");
 const path = require("path");
 const AppError = require("../utils/appError");
 
+//used for creating a new blog
 exports.createBlog = async (req, res, next) => {
   try {
     const { title, description, content, author, coverImg } = { ...req.body };
@@ -22,6 +23,13 @@ exports.createBlog = async (req, res, next) => {
   }
 };
 
+//used for retrieving all the blogs
+exports.getBlogs = async(req,res,next) => {
+  
+
+};
+
+//used for retrieving a particular blog using blog id
 exports.getBlog = async (req, res, next) => {
   const blogId = req.params.id;
   const blog = await Blog.findById(blogId);

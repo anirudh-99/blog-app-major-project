@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { convertFromRaw, convertToRaw } from "draft-js";
+import React, { useState } from "react";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import draftToHtml from "draftjs-to-html";
-import { API_URL } from "../constants";
+import { API_URL, initialContentState } from "../constants";
+import { makeStyles, Grid, TextField, Button } from "@material-ui/core";
+import { Photo as PhotoIcon } from "@material-ui/icons";
 
 import axios from "axios";
-
-
 
 const uploadImageCallback = (file) => {
   return new Promise((resolve, reject) => {
@@ -21,7 +20,6 @@ const uploadImageCallback = (file) => {
         },
       })
       .then((res) => {
-        console.log(res.data.data.fileName);
         const url = API_URL + "/public/" + res.data.data.fileName;
         resolve({ data: { link: url } });
       })
@@ -29,19 +27,49 @@ const uploadImageCallback = (file) => {
   });
 };
 
+const useStyles = makeStyles((theme) => ({
+  form: {
+    margin: "16px auto",
+    width: "89%",
+  },
+  uploadField: {
+    display: "none",
+  },
+  uploadButton: {
+    padding: "13px 0",
+  },
+  photoIcon: {
+    marginRight: theme.spacing(2),
+  },
+}));
+
 const TextEditor = (props) => {
-  const [rawContentState, setRawContentState] = useState(null);
-  const [title, setTitle] = useState("Untitled");
+  const [rawContentState, setRawContentState] = useState();
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [coverImg, setCoverImg] = useState(null);
+
+  const classes = useStyles();
 
   const upload = async () => {
-    // const markup = draftToHtml(rawContentState);
-    // console.log(markup);
+    // 1. First upload the cover img
+    const formData = new FormData();
+    formData.append("file", coverImg);
+    const res = await axios.post(`${API_URL}/files/upload`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    const imgUrl = API_URL + "/public/" + res.data.data.fileName;
+    console.log({imgUrl});
+    // 2. Upload title,desc,content,coverImg url to the backend
     await axios.post(
       `${API_URL}/blogs`,
       {
-        title: "something",
-        description: "something something",
+        title,
+        description,
         content: rawContentState,
+        coverImg: imgUrl,
       },
       {
         "Content-Type": "application/json",
@@ -58,8 +86,54 @@ const TextEditor = (props) => {
 
   return (
     <>
+      <form className={classes.form}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={8}>
+            <TextField
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              fullWidth
+              variant="outlined"
+              label="Title"
+            />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <input
+              onChange={(e) => {
+                setCoverImg(e.target.files[0]);
+              }}
+              className={classes.uploadField}
+              type="file"
+              id="upload-button"
+            />
+            <label htmlFor="upload-button">
+              <Button
+                variant="outlined"
+                component="span"
+                color="primary"
+                size="large"
+                fullWidth
+                className={classes.uploadButton}
+              >
+                <PhotoIcon className={classes.photoIcon} />
+                {coverImg ? coverImg.name : "Select cover photo"}
+              </Button>
+            </label>
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              multiline
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={2}
+              variant="outlined"
+              label="Description"
+            />
+          </Grid>
+        </Grid>
+      </form>
       <Editor
-        style={{ width: "700px" }}
         toolbarClassName="toolbarClassName"
         wrapperClassName="wrapperClassName"
         editorClassName="editorClassName"
@@ -67,16 +141,19 @@ const TextEditor = (props) => {
           width: "91%",
           border: "1px solid grey",
           padding: "4px",
-          marginLeft: "30px",
+          margin: "auto",
         }}
         toolbarStyle={{
           width: "90%",
           border: "1px solid grey",
           paddingRight: "7px",
-          marginLeft: "30px",
+          margin: "3px auto",
         }}
         wrapperStyle={{ margin: "15px" }}
-        onContentStateChange={setRawContentState}
+        initialContentState={initialContentState}
+        onContentStateChange={(s) => {
+          setRawContentState(s);
+        }}
         toolbar={{
           image: {
             uploadCallback: uploadImageCallback,
@@ -84,8 +161,8 @@ const TextEditor = (props) => {
           },
         }}
       />
-      <button onClick={upload}>Upload</button>
-      <button onClick={getBlog}>GetBlog</button>
+      <Button variant="contained" color="primary" onClick={upload}>Upload</Button>
+      <Button  variant="contained" color="primary" onClick={getBlog}>GetBlog</Button>
     </>
   );
 };
