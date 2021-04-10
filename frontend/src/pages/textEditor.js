@@ -7,6 +7,7 @@ import { makeStyles, Grid, TextField, Button } from "@material-ui/core";
 import { Photo as PhotoIcon } from "@material-ui/icons";
 
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const uploadImageCallback = (file) => {
   return new Promise((resolve, reject) => {
@@ -48,6 +49,7 @@ const TextEditor = (props) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [coverImg, setCoverImg] = useState(null);
+  const auth = useSelector((state) => state.auth);
 
   const classes = useStyles();
 
@@ -61,7 +63,7 @@ const TextEditor = (props) => {
       },
     });
     const imgUrl = API_URL + "/public/" + res.data.data.fileName;
-    console.log({imgUrl});
+    console.log({ imgUrl });
     // 2. Upload title,desc,content,coverImg url to the backend
     await axios.post(
       `${API_URL}/blogs`,
@@ -70,6 +72,7 @@ const TextEditor = (props) => {
         description,
         content: rawContentState,
         coverImg: imgUrl,
+        author: auth.user._id,
       },
       {
         "Content-Type": "application/json",
@@ -161,8 +164,12 @@ const TextEditor = (props) => {
           },
         }}
       />
-      <Button variant="contained" color="primary" onClick={upload}>Upload</Button>
-      <Button  variant="contained" color="primary" onClick={getBlog}>GetBlog</Button>
+      <Button variant="contained" color="primary" onClick={upload}>
+        Upload
+      </Button>
+      <Button variant="contained" color="primary" onClick={getBlog}>
+        GetBlog
+      </Button>
     </>
   );
 };

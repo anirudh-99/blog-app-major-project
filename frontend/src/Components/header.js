@@ -24,10 +24,12 @@ import {
   Notifications as NotificationsIcon,
   MoreVert as MoreIcon,
   Create as CreateIcon,
-  Home as HomeIcon
+  Home as HomeIcon,
 } from "@material-ui/icons";
 
 import { Link as RouterLink } from "react-router-dom";
+import { useDispatch,useSelector } from "react-redux";
+import * as actionCreators from "../redux/actions/index";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -120,6 +122,8 @@ export default function PrimarySearchAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [drawer, setDrawer] = React.useState(false);
+  const dispatch = useDispatch();
+  const auth = useSelector(state => state.auth);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -154,6 +158,7 @@ export default function PrimarySearchAppBar() {
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      {auth.isAuthenticated && <MenuItem onClick={() => dispatch(actionCreators.signout())}>Log out</MenuItem>}
     </Menu>
   );
 
@@ -268,8 +273,12 @@ export default function PrimarySearchAppBar() {
       <Drawer anchor="left" open={drawer} onClose={() => setDrawer(false)}>
         <div className={classes.drawer}>
           <List component="nav">
-            <ListItemLink icon={<HomeIcon/>} primary="Home" to="/" />
-            <ListItemLink icon={<CreateIcon/>} primary="Write Blog" to="/writeBlog" />
+            <ListItemLink icon={<HomeIcon />} primary="Home" to="/" />
+            <ListItemLink
+              icon={<CreateIcon />}
+              primary="Write Blog"
+              to="/writeBlog"
+            />
           </List>
         </div>
       </Drawer>

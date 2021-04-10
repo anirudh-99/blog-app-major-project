@@ -24,17 +24,37 @@ exports.createBlog = async (req, res, next) => {
 };
 
 //used for retrieving all the blogs
-exports.getBlogs = async(req,res,next) => {
-  
-
+exports.getBlogs = async (req, res, next) => {
+  try {
+    const blogs = await Blog.find({}, { content: 0 }).populate(
+      "author",
+      "name"
+    );
+    res.status(200).json({
+      status: "success",
+      data: { blogs },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: "failure",
+      message: "cannot retrieve the blogs",
+    });
+  }
 };
 
 //used for retrieving a particular blog using blog id
 exports.getBlog = async (req, res, next) => {
   const blogId = req.params.id;
-  const blog = await Blog.findById(blogId);
-  res.status(200).json({
-    status: "success",
-    data: { blog },
-  });
+  try {
+    const blog = await Blog.findById(blogId).populate("author", "name");
+    res.status(200).json({
+      status: "success",
+      data: { blog },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: "failure",
+      message: "Failed to fetch the blog",
+    });
+  }
 };

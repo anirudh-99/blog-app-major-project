@@ -28,16 +28,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login() {
+export default function Signup() {
   const classes = useStyles();
   return (
     <Container className={classes.container} maxWidth="xs">
       <Paper variant="outlined" className={classes.paper}>
         <Typography className={classes.heading} variant="h5">
-          Sign In
+          Sign Up
         </Typography>
         <form className={classes.form}>
-          <TextField margin="normal" variant="outlined" label="Username*" />
+          <TextField margin="normal" variant="outlined" label="Name*" />
+          <TextField margin="normal" variant="outlined" label="Email*" />
           <TextField margin="normal" variant="outlined" label="Password*" />
           <Button
             size="large"
@@ -45,10 +46,10 @@ export default function Login() {
             variant="contained"
             color="primary"
           >
-            Sign in
+            Sign up
           </Button>
-          <Link style={{ textAlign: "right",marginTop:"8px" }} to="/signup">
-            Don't have an account? Sign up.
+          <Link style={{ textAlign: "right", marginTop: "8px" }} to="/login">
+            Already created an account? Sign In.
           </Link>
         </form>
       </Paper>

@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Route, Redirect } from "react-router-dom";
 
-const PrivateRoute = (props) => {
-  const [token, setToken] = useState(null);
-  useEffect(() => {
-    setToken(window.localStorage.getItem("token"));
-  }, []);
+const PrivateRoute = ({ component: Component, ...rest }) => {
   return (
-    <Route {...props}>
-      {token ? props.children : <Redirect to={"/login"} />}
-    </Route>
+    <Route
+      {...rest}
+      render={(props) => {
+        const token = window.localStorage.getItem("token");
+        return token ? <Component {...props} /> : <Redirect to="/login" />;
+      }}
+    />
   );
 };
 

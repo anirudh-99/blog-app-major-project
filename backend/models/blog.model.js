@@ -10,7 +10,7 @@ let blogSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "user",
   },
-});
+},{timestamps: true});
 
 blogSchema.methods.upvote = function () {
   this.upvotes++;
