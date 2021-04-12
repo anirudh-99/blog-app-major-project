@@ -3,6 +3,7 @@ const Router = express.Router();
 const multer = require("multer");
 
 const BlogController = require("../controllers/blogController");
+const authController = require("../controllers/authController");
 
 const generateId = () => {
   return Math.random().toString(36).substr(2, 9);
@@ -28,8 +29,11 @@ const upload = multer({
   },
 });
 
-Router.get("/",BlogController.getBlogs);
-Router.post("/",BlogController.createBlog);
-Router.get("/:id",BlogController.getBlog);
+Router.route("/")
+  .get(authController.protect, BlogController.getBlogs)
+  .post(authController.protect, BlogController.createBlog);
+Router.get("/:id", authController.protect, BlogController.getBlog);
+Router.post("/:id/upvote", authController.protect, BlogController.upvoteBlog);
+Router.get('/:id/upvotedBefore',authController.protect, BlogController.upvotedBefore);
 
 module.exports = Router;

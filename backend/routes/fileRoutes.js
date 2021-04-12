@@ -1,6 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 const Router = express.Router();
+const authController = require('../controllers/authController');
 
 const generateId = () => {
   return Math.random().toString(36).substr(2, 9);
@@ -26,23 +27,26 @@ const upload = multer({
   },
 });
 
-Router.post("/upload", upload.single("file"), async (req, res) => {
-  try {
-    const { path, mimetype } = req.file;
-    const fileName = path.split("/")[1];
-    res.status(200).json({
-      status: "success",
-      message: "file uploaded succesfully",
-      data: { fileName },
-    });
-  } catch (err) {
-    res
-      .status(400)
-      .json({
+Router.post(
+  "/upload",
+  authController.protect,
+  upload.single("file"),
+  async (req, res) => {
+    try {
+      const { path, mimetype } = req.file;
+      const fileName = path.split("/")[1];
+      res.status(200).json({
+        status: "success",
+        message: "file uploaded succesfully",
+        data: { fileName },
+      });
+    } catch (err) {
+      res.status(400).json({
         status: "failure",
         message: "Error while uploading file. Try again.",
       });
+    }
   }
-});
+);
 
 module.exports = Router;

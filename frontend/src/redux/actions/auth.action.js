@@ -1,11 +1,11 @@
 import { authConstants } from "./constants";
 import { API_URL } from "../../constants";
-import axios from "axios";
+import axios from "../../axios";
 
 export const login = (user) => async (dispatch) => {
   dispatch({ type: authConstants.LOGIN_REQUEST });
   try {
-    const res = await axios.post(`${API_URL}/users/login`, user);
+    const res = await axios.post("/users/login", user);
 
     const token = res.data.token;
     user = res.data.data.user;

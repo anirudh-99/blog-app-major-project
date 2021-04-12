@@ -17,16 +17,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Home() {
+const Home = (props) => {
   const dispatch = useDispatch();
   const blogsState = useSelector((state) => state.blogs);
   const classes = useStyles();
 
   React.useEffect(() => {
-    if (blogsState.blogs.length === 0) {
-      dispatch(getBlogs());
-    }
-  });
+    console.log("mounting home");
+    setTimeout(() => {
+      if (blogsState.blogs.length === 0) {
+        dispatch(getBlogs());
+      }
+    }, 3000);
+    return () => {
+      console.log("unmouting home");
+    };
+  }, []);
 
   const formatTime = (time) => {
     return moment.utc(time).format("MMMM d, YYYY");
@@ -34,7 +40,14 @@ export default function Home() {
   return (
     <Grid container spacing={2} className={classes.grid}>
       {blogsState.blogs.map((blog) => (
-        <Grid item xs={12} sm={6} md={4} className={classes.gridItem}>
+        <Grid
+          item
+          xs={12}
+          sm={6}
+          md={4}
+          className={classes.gridItem}
+          key={blog._id}
+        >
           <BlogCard
             key={blog._id}
             id={blog._id}
@@ -49,4 +62,6 @@ export default function Home() {
       ))}
     </Grid>
   );
-}
+};
+
+export default Home;

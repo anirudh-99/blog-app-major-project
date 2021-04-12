@@ -4,7 +4,7 @@ import TextEditor from "./pages/textEditor";
 import Header from "./Components/header";
 import Login from "./pages/login";
 import Signup from "./pages/signup";
-import Blog from './pages/blog';
+import Blog from './pages/blog/blog';
 import PrivateRoute from "./Components/hoc/privateRoutes";
 import { API_URL } from "./constants";
 import { isUserLoggedIn } from "./redux/actions/index";
@@ -30,9 +30,9 @@ function App() {
         <Switch>
           <PrivateRoute exact={true} path="/" component={Home} />
           <PrivateRoute path="/writeBlog" component={TextEditor} />
+          <PrivateRoute path="/blogs/:id" component={Blog}/>
           <Route path="/login" component={Login} />
           <Route path="/signup" component={Signup} />
-          <Route path="/blogs/:id" component={Blog}/>
         </Switch>
       </div>
     </Router>

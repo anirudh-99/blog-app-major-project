@@ -6,7 +6,7 @@ import { API_URL, initialContentState } from "../constants";
 import { makeStyles, Grid, TextField, Button } from "@material-ui/core";
 import { Photo as PhotoIcon } from "@material-ui/icons";
 
-import axios from "axios";
+import axios from "../axios";
 import { useSelector } from "react-redux";
 
 const uploadImageCallback = (file) => {
@@ -15,7 +15,7 @@ const uploadImageCallback = (file) => {
     formData.append("file", file);
 
     axios
-      .post(`${API_URL}/files/upload`, formData, {
+      .post("/files/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -57,7 +57,7 @@ const TextEditor = (props) => {
     // 1. First upload the cover img
     const formData = new FormData();
     formData.append("file", coverImg);
-    const res = await axios.post(`${API_URL}/files/upload`, formData, {
+    const res = await axios.post("/files/upload", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -66,7 +66,7 @@ const TextEditor = (props) => {
     console.log({ imgUrl });
     // 2. Upload title,desc,content,coverImg url to the backend
     await axios.post(
-      `${API_URL}/blogs`,
+      "/blogs",
       {
         title,
         description,
@@ -81,7 +81,7 @@ const TextEditor = (props) => {
   };
 
   const getBlog = async () => {
-    const res = await axios.get(`${API_URL}/blogs/605ddb451cf6a9dc759d2ac2`);
+    const res = await axios.get("/blogs/605ddb451cf6a9dc759d2ac2");
     const rawContent = res.data.data.blog.content;
     const markup = draftToHtml(rawContent);
     console.log(markup);

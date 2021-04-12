@@ -1,6 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
+import IconButton from "@material-ui/core/IconButton";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
@@ -10,24 +11,26 @@ import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import { useHistory } from "react-router-dom";
 
-import ScheduleIcon from "@material-ui/icons/Schedule";
-import ThumbUpIcon from "@material-ui/icons/ThumbUp";
+import BookmarkBorderIcon from "@material-ui/icons/BookmarkBorder";
 
 const useStyles = makeStyles((theme) => ({
   card: {
-    height: 310,
+    height: 325,
     width: 415,
     [theme.breakpoints.down("xs")]: {
-      height: 270,
+      height: 285,
     },
   },
   title: {
     textAlign: "left",
     overflow: "hidden",
   },
+  cardContent: {
+    height: 100,
+    overflow: "hidden",
+  },
   description: {
     textAlign: "left",
-    height: 40,
     overflow: "hidden",
   },
   media: {
@@ -39,7 +42,15 @@ const useStyles = makeStyles((theme) => ({
   cardFooter: {
     display: "flex",
     justifyContent: "space-between",
+    alignItems: "center",
     color: "grey",
+    height: 15
+  },
+  cardFooterLeft: {
+    display: "flex",
+    "& > *": {
+      margin: "0 4px",
+    },
   },
   footerIcon: {
     marginRight: "5px",
@@ -66,7 +77,7 @@ export default function BlogCard({
     <Card raised className={classes.card} fullWidth>
       <CardActionArea onClick={handleClick}>
         <CardMedia className={classes.media} image={coverImg} />
-        <CardContent>
+        <CardContent className={classes.cardContent}>
           <Typography
             className={classes.title}
             gutterBottom
@@ -87,21 +98,25 @@ export default function BlogCard({
       </CardActionArea>
       <Divider />
       <CardContent className={classes.cardFooter}>
-        <Typography
-          variant="body2"
-          style={{ display: "flex", alignItems: "center" }}
-        >
-          <ScheduleIcon fontSize="small" className={classes.footerIcon} />
-          {time}
-        </Typography>
-        <Typography
-          variant="body2"
-          style={{ display: "flex", alignItems: "center" }}
-        >
-          <ThumbUpIcon fontSize="small" className={classes.footerIcon} />
-          {likes}
-        </Typography>
-        <Typography variant="body2">By {author}</Typography>
+        <div className={classes.cardFooterLeft}>
+          <Typography
+            variant="body2"
+            style={{ display: "flex", alignItems: "center" }}
+          >
+            {time}
+          </Typography>
+          ·
+          <Typography
+            variant="body2"
+            style={{ display: "flex", alignItems: "center" }}
+          >
+            {likes} likes
+          </Typography>
+          ·<Typography variant="body2">{author}</Typography>
+        </div>
+        <IconButton>
+          <BookmarkBorderIcon />
+        </IconButton>
       </CardContent>
     </Card>
   );
