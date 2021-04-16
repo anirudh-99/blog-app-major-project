@@ -35,7 +35,7 @@ const Home = (props) => {
   }, []);
 
   const formatTime = (time) => {
-    return moment.utc(time).format("MMMM d, YYYY");
+    return moment.utc(time).format("MMMM DD, YYYY");
   };
   return (
     <Grid container spacing={2} className={classes.grid}>

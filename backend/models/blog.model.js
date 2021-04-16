@@ -12,9 +12,4 @@ let blogSchema = new mongoose.Schema({
   },
 },{timestamps: true});
 
-blogSchema.methods.upvote = function () {
-  this.upvotes++;
-  return this.save();
-};
-
 module.exports = mongoose.model("blog", blogSchema);

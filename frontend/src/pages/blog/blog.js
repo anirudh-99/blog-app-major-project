@@ -6,6 +6,8 @@ import { API_URL } from "../../constants";
 import draftToHtml from "draftjs-to-html";
 import clsx from "clsx";
 
+import Comments from "../../Components/Comments/comments";
+
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 import ForumIcon from "@material-ui/icons/Forum";
 
@@ -112,37 +114,40 @@ export default function Blog() {
   };
 
   return (
-    <div style={{ display: "flex" }}>
-      <div className={styles.sidebar}>
-        <div className={styles.sidebarIconsWrapper}>
-          <div className={styles.likeButton}>
-            <IconButton onClick={handleLikeButton}>
-              <ThumbUpIcon
-                fontSize="large"
-                className={clsx(state.isUpvoted && styles.likeButtonRed)}
-              />
-            </IconButton>
-            {state.blog.upvotes}
-          </div>
-          <div>
-            <IconButton>
-              <ForumIcon fontSize="large" />
-            </IconButton>
+    <>
+      <div style={{ display: "flex" }}>
+        <div className={styles.sidebar}>
+          <div className={styles.sidebarIconsWrapper}>
+            <div className={styles.likeButton}>
+              <IconButton onClick={handleLikeButton}>
+                <ThumbUpIcon
+                  fontSize="large"
+                  className={clsx(state.isUpvoted && styles.likeButtonRed)}
+                />
+              </IconButton>
+              {state.blog.upvotes}
+            </div>
+            <div>
+              <IconButton href="#comments">
+                <ForumIcon fontSize="large" />
+              </IconButton>
+            </div>
           </div>
         </div>
+        <div className={styles.mainContent}>
+          <header className={styles.blogHeader}>
+            <h1 className={styles.blogTitle}>
+              <span>{state.blog.title}</span>
+            </h1>
+            <h2 className={styles.blogDescription}>{state.blog.description}</h2>
+          </header>
+          <div
+            className={styles.blogContent}
+            dangerouslySetInnerHTML={{ __html: blogMarkup }}
+          ></div>
+        </div>
       </div>
-      <div className={styles.mainContent}>
-        <header className={styles.blogHeader}>
-          <h1 className={styles.blogTitle}>
-            <span>{state.blog.title}</span>
-          </h1>
-          <h2 className={styles.blogDescription}>{state.blog.description}</h2>
-        </header>
-        <div
-          className={styles.blogContent}
-          dangerouslySetInnerHTML={{ __html: blogMarkup }}
-        ></div>
-      </div>
-    </div>
+      <Comments id="comments" blogId={blogId} className={styles.comments} />
+    </>
   );
 }
