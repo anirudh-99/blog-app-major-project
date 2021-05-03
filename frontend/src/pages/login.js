@@ -74,6 +74,7 @@ export default function Login() {
             margin="normal"
             variant="outlined"
             label="Password*"
+            type="password"
           />
           <Button
             size="large"

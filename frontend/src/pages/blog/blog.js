@@ -1,14 +1,16 @@
 import React, { useReducer, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams,Link } from "react-router-dom";
 import axios from "../../axios";
 import { Typography } from "@material-ui/core";
 import { API_URL } from "../../constants";
 import draftToHtml from "draftjs-to-html";
 import clsx from "clsx";
+import moment from 'moment';
 
 import Comments from "../../Components/Comments/comments";
 
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
+import BookmarkBorderIcon from "@material-ui/icons/BookmarkBorder";
 import ForumIcon from "@material-ui/icons/Forum";
 
 import styles from "./blog.module.css";
@@ -19,6 +21,7 @@ const initialState = {
   loading: false,
   error: null,
   isUpvoted: false,
+  isBookmarked: false,
 };
 
 const reducer = (state, action) => {
@@ -61,6 +64,12 @@ const reducer = (state, action) => {
         isUpvoted: !state.isUpvoted,
       };
       break;
+    case "TOGGLE_IS_BOOKMARKED":
+      state = {
+        ...state,
+        isBookmarked: !state.isBookmarked,
+      };
+      break;
     default:
       break;
   }
@@ -75,6 +84,7 @@ export default function Blog() {
   useEffect(() => {
     async function fetchBlog() {
       try {
+        //fetch the contents of the blog
         dispatch({ type: "GET_BLOG_REQUEST" });
         let res = await axios.get(`/blogs/${blogId}`);
         dispatch({
@@ -83,6 +93,7 @@ export default function Blog() {
             blog: res.data.data.blog,
           },
         });
+        console.log(res.data.data);
         const rawContent = res.data.data.blog.content;
         const markup = draftToHtml(rawContent);
         setBlogMarkup(markup);
@@ -93,6 +104,12 @@ export default function Blog() {
           dispatch({
             type: "TOGGLE_IS_UPVOTED",
           });
+        }
+
+        //check if blog is already upvoted by the user
+        res = await axios.get(`/blogs/${blogId}/bookmarkedBefore`);
+        if (res.data.data.bookmarkedBefore) {
+          dispatch({ type: "TOGGLE_IS_BOOKMARKED" });
         }
       } catch (err) {
         dispatch({
@@ -113,9 +130,22 @@ export default function Blog() {
       .catch((err) => {});
   };
 
+  //todo: properly handle error message
+  const handleBookmarkButton = (e) => {
+    dispatch({ type: "TOGGLE_IS_BOOKMARKED" });
+    axios
+      .post(`/blogs/${blogId}/bookmark`)
+      .then((res) => {})
+      .catch((err) => {});
+  };
+
+  const formatTime = (time) => {
+    return moment.utc(time).format("MMMM DD, YYYY");
+  };
+
   return (
     <>
-      <div style={{ display: "flex" }}>
+      <div style={{ display: "flex", scrollBehavior: "smooth" }}>
         <div className={styles.sidebar}>
           <div className={styles.sidebarIconsWrapper}>
             <div className={styles.likeButton}>
@@ -132,6 +162,16 @@ export default function Blog() {
                 <ForumIcon fontSize="large" />
               </IconButton>
             </div>
+            <div>
+              <IconButton onClick={handleBookmarkButton}>
+                <BookmarkBorderIcon
+                  fontSize="large"
+                  className={clsx(
+                    state.isBookmarked && styles.bookmarkButtonRed
+                  )}
+                />
+              </IconButton>
+            </div>
           </div>
         </div>
         <div className={styles.mainContent}>
@@ -140,6 +180,10 @@ export default function Blog() {
               <span>{state.blog.title}</span>
             </h1>
             <h2 className={styles.blogDescription}>{state.blog.description}</h2>
+            <h4 className={styles.blogMetaData}>
+              Written by <Link className={styles.authorLink}>{state.blog.author?.name}</Link><span className={styles.separator}>·</span> 
+              {formatTime(state.blog.createdAt)}
+            </h4>
           </header>
           <div
             className={styles.blogContent}

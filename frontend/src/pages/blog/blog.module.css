@@ -78,6 +78,24 @@
     color: salmon;
 }
 
+.bookmarkButtonRed{
+    color: salmon;
+}
+
 .comments{
   margin-left: 180px;
+}
+
+.blogMetaData{
+  font-size: 15px;
+  font-weight: 380;
+}
+
+.blogMetaData .authorLink{
+  text-decoration: none;
+  color: rgb(27, 82, 165);
+}
+
+.separator{
+  margin:auto 3px;
 }

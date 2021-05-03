@@ -26,16 +26,16 @@ let Comments = (props) => {
   return (
     <div {...props}>
       <h1>Comments({commentsCount})</h1>
-      <Reply />
-      {comments.length === 0 ? (
-        <h1>No Comments.</h1>
-      ) : (
-        <CommentContext.Provider
-          value={{ replying, setReplying, blogId: props.blogId }}
-        >
-          {gen_comments(comments, [])}
-        </CommentContext.Provider>
-      )}
+      <CommentContext.Provider
+        value={{ replying, setReplying, blogId: props.blogId }}
+      >
+        <Reply parentId={null} />
+        {comments.length === 0 ? (
+          <h1>No Comments.</h1>
+        ) : (
+          gen_comments(comments, [])
+        )}
+      </CommentContext.Provider>
     </div>
   );
 };

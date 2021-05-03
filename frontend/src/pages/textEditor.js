@@ -36,8 +36,12 @@ const useStyles = makeStyles((theme) => ({
   uploadField: {
     display: "none",
   },
-  uploadButton: {
+  uploadCoverButton: {
     padding: "13px 0",
+  },
+  uploadButton:{
+    width: "30%",
+    margin:"20px 30%"
   },
   photoIcon: {
     marginRight: theme.spacing(2),
@@ -80,12 +84,7 @@ const TextEditor = (props) => {
     );
   };
 
-  const getBlog = async () => {
-    const res = await axios.get("/blogs/605ddb451cf6a9dc759d2ac2");
-    const rawContent = res.data.data.blog.content;
-    const markup = draftToHtml(rawContent);
-    console.log(markup);
-  };
+ 
 
   return (
     <>
@@ -116,7 +115,7 @@ const TextEditor = (props) => {
                 color="primary"
                 size="large"
                 fullWidth
-                className={classes.uploadButton}
+                className={classes.uploadCoverButton}
               >
                 <PhotoIcon className={classes.photoIcon} />
                 {coverImg ? coverImg.name : "Select cover photo"}
@@ -164,11 +163,8 @@ const TextEditor = (props) => {
           },
         }}
       />
-      <Button variant="contained" color="primary" onClick={upload}>
+      <Button variant="contained" color="primary" onClick={upload} className={classes.uploadButton}>
         Upload
-      </Button>
-      <Button variant="contained" color="primary" onClick={getBlog}>
-        GetBlog
       </Button>
     </>
   );

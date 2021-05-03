@@ -27,10 +27,11 @@ let Reply = (props) => {
     } catch (err) {
       console.log(err.response);
     } finally {
-      setReplying([]);
+      //setReplying([]);
       window.location.reload();
     }
   };
+
 
   return (
     <div {...props}>

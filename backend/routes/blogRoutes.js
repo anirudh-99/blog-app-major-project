@@ -34,6 +34,20 @@ Router.route("/")
   .post(authController.protect, BlogController.createBlog);
 Router.get("/:id", authController.protect, BlogController.getBlog);
 Router.post("/:id/upvote", authController.protect, BlogController.upvoteBlog);
-Router.get('/:id/upvotedBefore',authController.protect, BlogController.upvotedBefore);
+Router.get(
+  "/:id/upvotedBefore",
+  authController.protect,
+  BlogController.upvotedBefore
+);
+Router.post(
+  "/:id/bookmark",
+  authController.protect,
+  BlogController.bookmarkBlog
+);
+Router.get(
+  "/:id/bookmarkedBefore",
+  authController.protect,
+  BlogController.bookmarkedBefore
+);
 
 module.exports = Router;
