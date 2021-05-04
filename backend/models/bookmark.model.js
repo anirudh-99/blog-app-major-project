@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 let bookmarkSchema = new mongoose.Schema({
-  blogId: {
+  blog: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "blog",
   },

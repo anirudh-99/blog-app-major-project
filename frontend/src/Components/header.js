@@ -24,10 +24,11 @@ import {
   MoreVert as MoreIcon,
   Create as CreateIcon,
   Home as HomeIcon,
+  Bookmarks as BookmarksIcon,
 } from "@material-ui/icons";
 
-import { Link as RouterLink } from "react-router-dom";
-import { useDispatch,useSelector } from "react-redux";
+import { Link as RouterLink,useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import * as actionCreators from "../redux/actions/index";
 
 const useStyles = makeStyles((theme) => ({
@@ -122,7 +123,8 @@ export default function PrimarySearchAppBar() {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [drawer, setDrawer] = React.useState(false);
   const dispatch = useDispatch();
-  const auth = useSelector(state => state.auth);
+  const history = useHistory();
+  const auth = useSelector((state) => state.auth);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -157,7 +159,11 @@ export default function PrimarySearchAppBar() {
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-      {auth.isAuthenticated && <MenuItem onClick={() => dispatch(actionCreators.signout())}>Log out</MenuItem>}
+      {auth.isAuthenticated && (
+        <MenuItem onClick={() => dispatch(actionCreators.signout())}>
+          Log out
+        </MenuItem>
+      )}
     </Menu>
   );
 
@@ -225,6 +231,9 @@ export default function PrimarySearchAppBar() {
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
+            <IconButton onClick={() => history.push('/bookmarks')}>
+              <BookmarksIcon style={{color:"white"}} />
+            </IconButton>
             <IconButton aria-label="show 17 new notifications" color="inherit">
               <Badge badgeContent={17} color="secondary">
                 <NotificationsIcon />

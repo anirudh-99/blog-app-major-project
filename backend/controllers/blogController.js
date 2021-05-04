@@ -1,6 +1,5 @@
 const Blog = require("../models/blog.model");
 const Upvote = require("../models/upvote.model");
-const Bookmark = require("../models/bookmark.model");
 const path = require("path");
 const AppError = require("../utils/appError");
 
@@ -113,52 +112,4 @@ exports.upvotedBefore = async (req, res, next) => {
   }
 };
 
-//bookmarks a particular blog
-exports.bookmarkBlog = async (req, res, next) => {
-  const blogId = req.params.id;
-  const userId = req.user.id;
 
-  try {
-    const bookmarkedBefore = await Bookmark.find({ blogId, userId }).count();
-
-    if (!bookmarkedBefore) {
-      await Bookmark.create({ blogId, userId });
-      return res.status(200).json({
-        status: "success",
-        message: "Blog has been bookmarked.",
-      });
-    } else {
-      //else downvote the blog
-      await Bookmark.deleteOne({ userId, blogId });
-      return res.status(200).json({
-        status: "success",
-        message: "Blog has been removed from bookmarks.",
-      });
-    }
-  } catch (err) {
-    res.status(400).json({
-      status: "failure",
-      message: "bookmark operation has been failed",
-    });
-  }
-};
-
-exports.bookmarkedBefore = async (req, res, next) => {
-  const blogId = req.params.id;
-  const userId = req.user.id;
-
-  try {
-    const isBookmarked = await Bookmark.find({ blogId, userId }).count();
-    return res.status(200).json({
-      status: "success",
-      data: {
-        bookmarkedBefore: isBookmarked,
-      },
-    });
-  } catch (err) {
-    res.status(400).json({
-      status: "failure",
-      message: "failed to retrieve bookmark info",
-    });
-  }
-};

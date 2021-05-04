@@ -4,6 +4,7 @@ import TextEditor from "./pages/textEditor";
 import Header from "./Components/header";
 import Login from "./pages/login";
 import Signup from "./pages/signup";
+import Bookmarks from './pages/bookmarks/bookmarks';
 import Blog from "./pages/blog/blog";
 import PrivateRoute from "./Components/hoc/privateRoutes";
 import { API_URL } from "./constants";
@@ -31,6 +32,7 @@ function App() {
           <PrivateRoute exact={true} path="/" component={Home} />
           <PrivateRoute path="/writeBlog" component={TextEditor} />
           <PrivateRoute path="/blogs/:id" component={Blog} />
+          <PrivateRoute path="/bookmarks" component={Bookmarks} />
           <Route path="/login" component={Login} />
           <Route path="/signup" component={Signup} />
         </Switch>

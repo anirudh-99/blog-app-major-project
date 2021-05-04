@@ -1,0 +1,15 @@
+.bookmarksContainer{
+    display: flex;
+    flex-direction: column;
+    margin-left: 200px;
+    margin-top: 10px;
+}
+
+.bookmarksContainer > * {
+    margin-top: 15px;
+}
+
+.bookmarksHeading {
+    text-decoration: underline;
+}
+

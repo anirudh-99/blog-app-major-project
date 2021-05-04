@@ -134,7 +134,7 @@ export default function Blog() {
   const handleBookmarkButton = (e) => {
     dispatch({ type: "TOGGLE_IS_BOOKMARKED" });
     axios
-      .post(`/blogs/${blogId}/bookmark`)
+      .post(`/bookmarks/${blogId}`)
       .then((res) => {})
       .catch((err) => {});
   };

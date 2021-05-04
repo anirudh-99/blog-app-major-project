@@ -29,6 +29,9 @@ const upload = multer({
   },
 });
 
+
+
+
 Router.route("/")
   .get(authController.protect, BlogController.getBlogs)
   .post(authController.protect, BlogController.createBlog);
@@ -39,15 +42,6 @@ Router.get(
   authController.protect,
   BlogController.upvotedBefore
 );
-Router.post(
-  "/:id/bookmark",
-  authController.protect,
-  BlogController.bookmarkBlog
-);
-Router.get(
-  "/:id/bookmarkedBefore",
-  authController.protect,
-  BlogController.bookmarkedBefore
-);
+
 
 module.exports = Router;
