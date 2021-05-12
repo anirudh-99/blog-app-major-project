@@ -6,7 +6,7 @@ export const signup = (user) => {
   return async (dispatch) => {
     dispatch({ type: userConstants.USER_REGISTER_REQUEST });
     try {
-      const res = await axios.post("/users/signup", { ...user });
+      const res = await axios.post("/auth/signup", { ...user });
       dispatch({
         type: userConstants.USER_REGISTER_SUCCESS,
         payload: { message: res.data.message },

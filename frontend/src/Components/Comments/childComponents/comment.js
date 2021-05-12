@@ -59,42 +59,44 @@ let Comment = ({
           Show More Replies
         </button>
       ) : (
-        <div id="right">
-          <div id="top">
-            <span
-              className="minimize"
-              onClick={() => setMinimized((minimized) => !minimized)}
-            >
-              [{minimized ? "+" : "-"}]
-            </span>
-            <span id="name">{authorName}</span>
-            <span id="date">{moment(date).fromNow()}</span>
-          </div>
-          <div id="content" className={minimized ? "hidden" : ""}>
-            <Markdown options={{ forceBlock: true }}>{content}</Markdown>
-          </div>
-          <div id="actions" className={minimized ? "hidden" : ""}>
-            <span
-              className={`${compare(replying, path) ? "selected" : ""}`}
-              onClick={() => {
-                if (compare(replying, path)) {
-                  setReplying([]);
-                } else {
-                  setReplying(path);
-                }
-              }}
-            >
-              reply
-            </span>
-          </div>
-          <Reply
-            className={`${
-              compare(replying, path) && !minimized ? "" : "hidden"
-            } commentReply`}
-            parentId={id}
-          />
-          <div className={`comments ${minimized ? "hidden" : ""}`}>
-            {gen_comments(comments, [...path])}
+        <div id={id}>
+          <div id="right">
+            <div id="top">
+              <span
+                className="minimize"
+                onClick={() => setMinimized((minimized) => !minimized)}
+              >
+                [{minimized ? "+" : "-"}]
+              </span>
+              <span id="name">{authorName}</span>
+              <span id="date">{moment(date).fromNow()}</span>
+            </div>
+            <div id="content" className={minimized ? "hidden" : ""}>
+              <Markdown options={{ forceBlock: true }}>{content}</Markdown>
+            </div>
+            <div id="actions" className={minimized ? "hidden" : ""}>
+              <span
+                className={`${compare(replying, path) ? "selected" : ""}`}
+                onClick={() => {
+                  if (compare(replying, path)) {
+                    setReplying([]);
+                  } else {
+                    setReplying(path);
+                  }
+                }}
+              >
+                reply
+              </span>
+            </div>
+            <Reply
+              className={`${
+                compare(replying, path) && !minimized ? "" : "hidden"
+              } commentReply`}
+              parentId={id}
+            />
+            <div className={`comments ${minimized ? "hidden" : ""}`}>
+              {gen_comments(comments, [...path])}
+            </div>
           </div>
         </div>
       )}

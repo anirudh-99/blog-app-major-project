@@ -107,7 +107,7 @@ export default function Blog() {
         }
 
         //check if blog is already upvoted by the user
-        res = await axios.get(`/blogs/${blogId}/bookmarkedBefore`);
+        res = await axios.get(`/bookmarks/${blogId}/bookmarkedBefore`);
         if (res.data.data.bookmarkedBefore) {
           dispatch({ type: "TOGGLE_IS_BOOKMARKED" });
         }

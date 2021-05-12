@@ -5,7 +5,7 @@ import axios from "../../axios";
 export const login = (user) => async (dispatch) => {
   dispatch({ type: authConstants.LOGIN_REQUEST });
   try {
-    const res = await axios.post("/users/login", user);
+    const res = await axios.post("/auth/login", user);
 
     const token = res.data.token;
     user = res.data.data.user;
@@ -23,7 +23,7 @@ export const login = (user) => async (dispatch) => {
     dispatch({
       type: authConstants.LOGIN_FAILURE,
       payload: {
-        error: err.response.data.message,
+        error: err.response?.data?.message,
       },
     });
   }
@@ -54,6 +54,7 @@ export const isUserLoggedIn = () => async (dispatch) => {
       },
     });
   } else {
+    
     dispatch({
       type: authConstants.LOGIN_FAILURE,
       payload: { error: "failed to login" },

@@ -29,19 +29,20 @@ const upload = multer({
   },
 });
 
-
-
-
 Router.route("/")
   .get(authController.protect, BlogController.getBlogs)
   .post(authController.protect, BlogController.createBlog);
-Router.get("/:id", authController.protect, BlogController.getBlog);
+
+Router.route("/:id")
+  .get(authController.protect, BlogController.getBlog)
+  .patch(authController.protect, BlogController.updateBlog);
+
 Router.post("/:id/upvote", authController.protect, BlogController.upvoteBlog);
+
 Router.get(
   "/:id/upvotedBefore",
   authController.protect,
   BlogController.upvotedBefore
 );
-
 
 module.exports = Router;

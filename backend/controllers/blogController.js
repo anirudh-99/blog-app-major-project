@@ -60,6 +60,31 @@ exports.getBlog = async (req, res, next) => {
   }
 };
 
+//used for updating the contents of the blog
+exports.updateBlog = async (req, res, next) => {
+  const blogId = req.params.id;
+  const { title, description, content, coverImg } = { ...req.body };
+  try {
+    const blog = await Blog.findByIdAndUpdate(
+      blogId,
+      {
+        title,
+        description,
+        content,
+        coverImg,
+      },
+      { omitUndefined: true }
+    );
+    //todo: deleting the old image
+    return res.status(200).json({
+      status: "success",
+      message: "blog successfully updated",
+    });
+  } catch (err) {
+    next(new AppError("Something went wrong while updating the blog", 500));
+  }
+};
+
 //used for upvoting a particular blog and if it's already upvoted then it removes an upvote
 exports.upvoteBlog = async (req, res, next) => {
   const blogId = req.params.id;
@@ -111,5 +136,3 @@ exports.upvotedBefore = async (req, res, next) => {
     });
   }
 };
-
-

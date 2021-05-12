@@ -1,0 +1,18 @@
+.blogsContainer{
+    display: flex;
+    flex-direction: column;
+}
+
+.blogsContainer > *{
+    margin-top: 4px;
+}
+
+.wrapper{
+    margin-top:0px;
+}
+
+.mainHeading{
+    font-weight: 600;
+    font-size: 30px;
+    text-decoration: underline;
+}

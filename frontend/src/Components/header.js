@@ -27,7 +27,7 @@ import {
   Bookmarks as BookmarksIcon,
 } from "@material-ui/icons";
 
-import { Link as RouterLink,useHistory } from "react-router-dom";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import * as actionCreators from "../redux/actions/index";
 
@@ -146,6 +146,12 @@ export default function PrimarySearchAppBar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  //custom functions
+  const profileOnClickHandler = () => {
+    history.push(`/profile/${auth.user._id}`);
+    handleMenuClose();
+  };
+
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
@@ -157,7 +163,7 @@ export default function PrimarySearchAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick={profileOnClickHandler}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
       {auth.isAuthenticated && (
         <MenuItem onClick={() => dispatch(actionCreators.signout())}>
@@ -231,14 +237,14 @@ export default function PrimarySearchAppBar() {
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton onClick={() => history.push('/bookmarks')}>
-              <BookmarksIcon style={{color:"white"}} />
+            <IconButton onClick={() => history.push("/bookmarks")}>
+              <BookmarksIcon style={{ color: "white" }} />
             </IconButton>
-            <IconButton aria-label="show 17 new notifications" color="inherit">
+            {/* <IconButton aria-label="show 17 new notifications" color="inherit">
               <Badge badgeContent={17} color="secondary">
                 <NotificationsIcon />
               </Badge>
-            </IconButton>
+            </IconButton> */}
             <IconButton
               edge="end"
               aria-label="account of current user"

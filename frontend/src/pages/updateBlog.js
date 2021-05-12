@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { Editor } from "react-draft-wysiwyg";
+import { EditorState, convertFromRaw, convertToRaw } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import draftToHtml from "draftjs-to-html";
-import { API_URL, initialContentState } from "../constants";
+import { API_URL } from "../constants";
 import { makeStyles, Grid, TextField, Button } from "@material-ui/core";
-import { Photo as PhotoIcon } from "@material-ui/icons";
+import { Photo as PhotoIcon, Save as SaveIcon } from "@material-ui/icons";
 
 import axios from "../axios";
 import { useSelector } from "react-redux";
@@ -39,9 +40,9 @@ const useStyles = makeStyles((theme) => ({
   uploadCoverButton: {
     padding: "13px 0",
   },
-  uploadButton:{
+  uploadButton: {
     width: "30%",
-    margin:"20px 30%"
+    margin: "20px 30%",
   },
   photoIcon: {
     marginRight: theme.spacing(2),
@@ -49,42 +50,76 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const TextEditor = (props) => {
-  const [rawContentState, setRawContentState] = useState();
+  const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [coverImg, setCoverImg] = useState(null);
   const auth = useSelector((state) => state.auth);
+  const { blogId } = useParams();
 
   const classes = useStyles();
 
-  const upload = async () => {
-    // 1. First upload the cover img
-    const formData = new FormData();
-    formData.append("file", coverImg);
-    const res = await axios.post("/files/upload", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    const imgUrl = API_URL + "/public/" + res.data.data.fileName;
-    console.log({ imgUrl });
-    // 2. Upload title,desc,content,coverImg url to the backend
-    await axios.post(
-      "/blogs",
-      {
-        title,
-        description,
-        content: rawContentState,
-        coverImg: imgUrl,
-        author: auth.user._id,
-      },
-      {
-        "Content-Type": "application/json",
+  useEffect(() => {
+    async function fetchBlogData() {
+      try {
+        let res = await axios.get(`/blogs/${blogId}`);
+        const blogData = res.data.data.blog;
+        setTitle(blogData.title);
+        setDescription(blogData.description);
+        if(!blogData.content.entityMap){
+          blogData.content.entityMap = {};
+        }
+        console.log(blogData.content);
+        setEditorState(
+          EditorState.createWithContent(convertFromRaw(blogData.content))
+        );
+        console.log(editorState);
+        console.log("hello");
+      } catch (err) {
+        //todo: handle error
+        console.log(err);
       }
-    );
-  };
+    }
+    fetchBlogData();
+  }, []);
 
- 
+  const saveData = async () => {
+    try {
+      let imgUrl = undefined;
+      //if the cover img is updated in upload that image first
+      if (coverImg) {
+        // First upload the cover img
+        const formData = new FormData();
+        formData.append("file", coverImg);
+        const res = await axios.post("/files/upload", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        imgUrl = API_URL + "/public/" + res.data.data.fileName;
+      }
+
+      // Upload title,desc,content,coverImg url to the backend
+      const res = await axios.patch(
+        `/blogs/${blogId}`,
+        {
+          title,
+          description,
+          content: convertToRaw(editorState.getCurrentContent()),
+          coverImg: imgUrl,
+        },
+        {
+          "Content-Type": "application/json",
+        }
+      );
+      //todo: display message
+    } catch (err) {
+      //todo: handle error
+      console.log(err.response);
+    } finally {
+      window.location.reload();
+    }
+  };
 
   return (
     <>
@@ -118,7 +153,7 @@ const TextEditor = (props) => {
                 className={classes.uploadCoverButton}
               >
                 <PhotoIcon className={classes.photoIcon} />
-                {coverImg ? coverImg.name : "Select cover photo"}
+                {coverImg ? coverImg.name : "Change cover photo"}
               </Button>
             </label>
           </Grid>
@@ -152,9 +187,9 @@ const TextEditor = (props) => {
           margin: "3px auto",
         }}
         wrapperStyle={{ margin: "15px" }}
-        initialContentState={initialContentState}
-        onContentStateChange={(s) => {
-          setRawContentState(s);
+        editorState={editorState}
+        onEditorStateChange={(s) => {
+          setEditorState(s);
         }}
         toolbar={{
           image: {
@@ -163,8 +198,14 @@ const TextEditor = (props) => {
           },
         }}
       />
-      <Button variant="contained" color="primary" onClick={upload} className={classes.uploadButton}>
-        Upload
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={saveData}
+        className={classes.uploadButton}
+      >
+        <SaveIcon />
+        Save
       </Button>
     </>
   );
