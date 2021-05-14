@@ -10,6 +10,7 @@ export default function Bookmarks() {
     async function fetchBookmarks() {
       try {
         let res = await axios.get("/bookmarks");
+        console.log(res);
         setBookmarks(res.data.data.bookmarks);
         console.log(bookmarks);
       } catch (err) {

@@ -35,7 +35,8 @@ Router.route("/")
 
 Router.route("/:id")
   .get(authController.protect, BlogController.getBlog)
-  .patch(authController.protect, BlogController.updateBlog);
+  .patch(authController.protect, BlogController.updateBlog)
+  .delete(authController.protect, BlogController.deleteBlog);
 
 Router.post("/:id/upvote", authController.protect, BlogController.upvoteBlog);
 

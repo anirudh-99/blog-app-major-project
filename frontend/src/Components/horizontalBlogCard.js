@@ -8,6 +8,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
+import axios from "../axios";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -53,6 +54,15 @@ export default function HorizontalBlogCard({
   const classes = useStyles();
   const history = useHistory();
 
+  const handleDeleteBlog = async (blogId) => {
+    try {
+      await axios.delete(`/blogs/${blogId}`);
+      console.log("blog deleted successful");
+    } catch (err) {
+      console.log(err.response);
+    }
+  };
+
   return (
     <Card className={classes.root}>
       <div className={classes.details}>
@@ -89,7 +99,15 @@ export default function HorizontalBlogCard({
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <Button size="small" onClick={() => history.push(`/updateBlog/${blogId}`)}>Edit</Button>
+          <Button
+            size="small"
+            onClick={() => history.push(`/updateBlog/${blogId}`)}
+          >
+            Edit
+          </Button>
+          <Button size="small" onClick={() => handleDeleteBlog(blogId)}>
+            Delete
+          </Button>
         </CardActions>
       </div>
       <CardMedia className={classes.cover} image={coverImg} />
